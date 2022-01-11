@@ -22,12 +22,10 @@ export class AppComponent {
 
   constructor(private wordleService: WordleService) {
     this.wordle = wordleService.generateWordle();
-    console.log(this.wordle);
   }
 
   @HostListener('document:keydown', ['$event'])
   onKeyUp(event: KeyboardEvent) {
-    console.log(event);
     const keyPressed = event.key;
     const isAlphabetKey: boolean = new RegExp(/^[a-z]$/).test(keyPressed);
     if (isAlphabetKey) {
