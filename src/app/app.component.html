@@ -1,5 +1,11 @@
 <div>
   <app-row [letters]="row" *ngFor="let row of rows"></app-row>
+  <div style="height: 30px"></div>
+  <app-keyboard
+    *ngFor="let row of keys"
+    [keys]="row"
+    (keyClicked)="onClickKey($event)"
+  ></app-keyboard>
 </div>
 
 <router-outlet></router-outlet>

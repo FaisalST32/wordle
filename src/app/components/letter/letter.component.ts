@@ -1,8 +1,12 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-letter',
-  template: ` <div [class]="state">{{ character }}</div> `,
+  template: `
+    <div [class]="state" [class.key]="isKey" (click)="onClickKey(character)">
+      {{ character }}
+    </div>
+  `,
   styles: [
     `
       div {
@@ -37,10 +41,30 @@ import { Component, Input } from '@angular/core';
         background-color: #000;
       }
     `,
+    `
+      .key {
+        font-size: 14px;
+        border-radius: 5px;
+        cursor: pointer;
+        min-width: 10px;
+        width: auto;
+        padding: 0 10px;
+      }
+      .key:active {
+        background-color: lightgray;
+      }
+    `,
   ],
 })
 export class LetterComponent {
   @Input('state') state: 'valid' | 'invalid' | 'mispositioned' | 'empty' =
     'valid';
   @Input('character') character: string = '';
+  @Input() isKey?: boolean = false;
+  @Output() clicked: EventEmitter<string> = new EventEmitter();
+
+  onClickKey(key: string) {
+    console.log('clicking');
+    this.clicked.emit(key);
+  }
 }
