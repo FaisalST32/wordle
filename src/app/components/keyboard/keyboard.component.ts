@@ -20,7 +20,8 @@ import { LetterType } from '../row/row.component';
       .keyboard {
         display: flex;
         /* width: 600px; */
-        max-width: 95vh;
+        width: 95vw;
+        max-width: 400px;
         flex-flow: row nowrap;
         gap: 10px;
         justify-content: center;
