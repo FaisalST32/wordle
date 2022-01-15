@@ -11,23 +11,35 @@ export class AppComponent {
   private wordle: string = '';
   activeRowIndex: number = 0;
   activeColumnIndex: number = 0;
-  rows: LetterType[][] = [
-    generateEmptyRow(),
-    generateEmptyRow(),
-    generateEmptyRow(),
-    generateEmptyRow(),
-    generateEmptyRow(),
-    generateEmptyRow(),
-  ];
-
+  rows: LetterType[][] = [];
+  gameOver: boolean = false;
   keys: LetterType[][] = generateInitialKeys();
 
   constructor(private wordleService: WordleService) {
-    this.wordle = wordleService.generateWordle();
+    this.initializeGame();
+  }
+
+  initializeGame() {
+    this.wordle = this.wordleService.generateWordle();
+    this.activeRowIndex = 0;
+    this.activeColumnIndex = 0;
+    this.keys = generateInitialKeys();
+    this.rows = [
+      generateEmptyRow(),
+      generateEmptyRow(),
+      generateEmptyRow(),
+      generateEmptyRow(),
+      generateEmptyRow(),
+      generateEmptyRow(),
+    ];
+    this.gameOver = false;
   }
 
   @HostListener('document:keydown', ['$event'])
-  onKeyUp(event: KeyboardEvent) {
+  async onKeyUp(event: KeyboardEvent) {
+    if (this.gameOver) {
+      return;
+    }
     const keyPressed = event.key;
     const isAlphabetKey: boolean = new RegExp(/^[a-z]$/).test(keyPressed);
     if (isAlphabetKey && this.activeColumnIndex < 5) {
@@ -46,11 +58,40 @@ export class AppComponent {
         return;
       }
 
-      const updatedRow = this.validateLetters(currentRow, this.wordle);
-
-      if (updatedRow.every((letter) => letter.state === 'valid')) {
-        alert('Yay! You have won');
+      const word: string = currentRow
+        .map((letter) => letter.character)
+        .join('');
+      const isValidWord = await this.wordleService.checkIfWordExists(word);
+      if (!isValidWord) {
+        alert('invalid word try again');
+        return;
       }
+
+      const updatedRow = this.validateLetters(currentRow, this.wordle);
+      const hasWonGame: boolean = updatedRow.every(
+        (letter) => letter.state === 'valid'
+      );
+      if (hasWonGame) {
+        const playAgain: boolean = confirm('Yay! You have won. Play again?');
+        if (playAgain) {
+          this.initializeGame();
+        } else {
+          this.gameOver = true;
+        }
+        return;
+      }
+      if (!hasWonGame && this.activeRowIndex === 5) {
+        const playAgain: boolean = confirm(
+          `Sorry mate. The correct word was ${this.wordle}. Play again?`
+        );
+        if (playAgain) {
+          this.initializeGame();
+        } else {
+          this.gameOver = true;
+        }
+        return;
+      }
+
       this.rows[this.activeRowIndex] = [...updatedRow];
       this.keys = [...this.updateKeyboard(updatedRow)];
 

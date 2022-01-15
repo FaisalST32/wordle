@@ -19,6 +19,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
         color: white;
         font-family: sans-serif;
         font-weight: bold;
+        border: solid #ccc 1px;
       }
     `,
     `
@@ -38,7 +39,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
     `,
     `
       .empty {
-        background-color: #000;
+        /* background-color: #000; */
       }
     `,
     `
@@ -46,9 +47,10 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
         font-size: 14px;
         border-radius: 5px;
         cursor: pointer;
-        min-width: 10px;
+        /* min-width: 10px; */
         width: auto;
-        padding: 0 10px;
+        height: 40px;
+        /* padding: 0px 7px; */
       }
       .key:active {
         background-color: lightgray;

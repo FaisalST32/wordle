@@ -631,4 +631,11 @@ export class WordleService {
     const index = Math.floor(Math.random() * this.wordleList.length);
     return this.wordleList[index].toUpperCase();
   }
+
+  async checkIfWordExists(word: string): Promise<boolean> {
+    const resp = await fetch(
+      'https://api.dictionaryapi.dev/api/v2/entries/en/' + word
+    );
+    return resp.status !== 404;
+  }
 }

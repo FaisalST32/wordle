@@ -11,6 +11,7 @@ import { LetterType } from '../row/row.component';
         [isKey]="true"
         (clicked)="onClickKey($event)"
         *ngFor="let key of keys"
+        style="flex-grow: 1; min-width: 25px;"
       ></app-letter>
     </div>
   `,
@@ -18,8 +19,9 @@ import { LetterType } from '../row/row.component';
     `
       .keyboard {
         display: flex;
-        width: 600px;
-        flex-flow: row wrap;
+        /* width: 600px; */
+        max-width: 95vh;
+        flex-flow: row nowrap;
         gap: 10px;
         justify-content: center;
         /* margin: auto; */
